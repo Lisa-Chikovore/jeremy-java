@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Jeremy Java Academy Explorer is an interactive Java programming adventure with challenges, documentation, timers and score tracking."
+  >
+
+  <title>Jeremy Java Academy Explorer</title>
+
+  <link
+    rel="stylesheet"
+    href="index.css"
+  >
+</head>
+
+<body>
+  <main id="game">
+
+
+    <section
+      id="landing-screen"
+      class="screen"
+      aria-labelledby="landing-title"
+    >
+      <div
+        class="landing-overlay"
+        aria-hidden="true"
+      ></div>
+
+      <div class="landing-content">
+        <p class="welcome-text">
+          Welcome to
+        </p>
+
+        <h1 id="landing-title">
+          Jeremy Java Academy
+
+          <span>
+            Explorer Certification
+          </span>
+        </h1>
+
+        <p class="tagline">
+          Where informatics and programming knowledge
+          will save you.
+        </p>
+
+        <button
+          id="start-button"
+          type="button"
+        >
+          Start Adventure
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         ADVENTURE SCREEN
+    =================================================== -->
+
+    <section
+      id="adventure-screen"
+      class="screen hidden"
+      aria-label="Java jungle adventure"
+    >
+      <header class="game-hud">
+        <button
+          id="back-button"
+          type="button"
+          aria-label="Return to the landing screen"
+        >
+          ← Back
+        </button>
+
+        <strong class="game-name">
+          Jeremy Java Explorer
+        </strong>
+
+        <div class="hud-information">
+          <span>
+            Level:
+
+            <strong id="level-display">
+              1
+            </strong>
+          </span>
+
+          <span>
+            Score:
+
+            <strong id="score-display">
+              0
+            </strong>
+          </span>
+
+          <span>
+            Progress:
+
+            <strong id="progress-display">
+              0/8
+            </strong>
+          </span>
+        </div>
+      </header>
+
+      <!-- ==============================================
+           JUNGLE MAP
+      =============================================== -->
+
+      <div id="jungle-world">
+        <div
+          id="jungle-path"
+          aria-hidden="true"
+        ></div>
+
+        <img
+          id="explorer"
+          src="assets/explorer-walk.png"
+          alt="Explorer walking through the jungle"
+        >
+
+      
+
+        <div
+          class="checkpoint"
+          data-level="1"
+          style="left: 24%; top: 74%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 1 checkpoint"
+          >
+
+          <span>
+            Level 1
+          </span>
+        </div>
+
+        <!-- Level 2 -->
+
+        <div
+          class="checkpoint"
+          data-level="2"
+          style="left: 34%; top: 64%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 2 checkpoint"
+          >
+
+          <span>
+            Level 2
+          </span>
+        </div>
+
+        <!-- Level 3 -->
+
+        <div
+          class="checkpoint"
+          data-level="3"
+          style="left: 44%; top: 54%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 3 checkpoint"
+          >
+
+          <span>
+            Level 3
+          </span>
+        </div>
+
+        <!-- Level 4 -->
+
+        <div
+          class="checkpoint"
+          data-level="4"
+          style="left: 54%; top: 44%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 4 checkpoint"
+          >
+
+          <span>
+            Level 4
+          </span>
+        </div>
+
+        <!-- Level 5 -->
+
+        <div
+          class="checkpoint"
+          data-level="5"
+          style="left: 64%; top: 35%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 5 checkpoint"
+          >
+
+          <span>
+            Level 5
+          </span>
+        </div>
+
+        <!-- Level 6 -->
+
+        <div
+          class="checkpoint"
+          data-level="6"
+          style="left: 73%; top: 27%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 6 checkpoint"
+          >
+
+          <span>
+            Level 6
+          </span>
+        </div>
+
+        <!-- Level 7 -->
+
+        <div
+          class="checkpoint"
+          data-level="7"
+          style="left: 82%; top: 19%;"
+        >
+          <img
+            src="assets/checkpoint-stone.png"
+            alt="Level 7 checkpoint"
+          >
+
+          <span>
+            Level 7
+          </span>
+        </div>
+
+        <!-- Level 8 -->
+
+        <div
+          class="checkpoint"
+          data-level="8"
+          style="left: 90%; top: 11%;"
+        >
+          <img
+            src="assets/locked-gate.png"
+            alt="Level 8 final gate"
+          >
+
+          <span>
+            Level 8
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         CHALLENGE OVERLAY
+    =================================================== -->
+
+    <div
+      id="challenge-overlay"
+      class="challenge-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="challenge-title"
+    >
+      <section class="challenge-board">
+
+        <!-- Challenge header -->
+
+        <header class="challenge-header">
+          <div class="challenge-heading">
+            <span id="challenge-level">
+              Level 1 — Challenge 1 of 2
+            </span>
+
+            <h2 id="challenge-title">
+              The Variable Stone
+            </h2>
+          </div>
+
+          <div
+            id="timer"
+            aria-label="Time remaining"
+            aria-live="polite"
+          >
+            10:00
+          </div>
+        </header>
+
+       
+
+        <div class="challenge-layout">
+
+       
+          <aside
+            class="documentation-panel"
+            aria-labelledby="documentation-title"
+          >
+            <div class="documentation-heading">
+              <span class="documentation-label">
+                Java Problem Solving Hints
+              </span>
+
+              <h3 id="documentation-title">
+                Complete Java Fundamentals Guide
+              </h3>
+            </div>
+
+            <div
+              id="documentation-content"
+              class="documentation-content"
+            >
+              <section class="documentation-section">
+                <h4>
+                  Loading Java Guide
+                </h4>
+
+                <p>
+                  The complete Java fundamentals guide will
+                  appear here when the game starts.
+                </p>
+
+                <pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}</code></pre>
+
+                <div class="documentation-note">
+                  The guide covers Java fundamentals,
+                  problem solving, methods, arrays,
+                  recursion and algorithms. Object-oriented
+                  programming topics are excluded.
+                </div>
+              </section>
+            </div>
+          </aside>
+
+          
+
+          <section
+            class="challenge-workspace"
+            aria-label="Java challenge workspace"
+          >
+
+
+            <div class="challenge-instructions">
+              <div class="challenge-section-heading">
+                <span>
+                  Current Mission
+                </span>
+
+                <h3>
+                  Challenge
+                </h3>
+              </div>
+
+              <p id="challenge-instruction">
+                Create an integer variable called score,
+                assign it the value 10 and print it.
+              </p>
+
+              <p class="challenge-points-row">
+                <strong>
+                  Available points:
+                </strong>
+
+                <span id="challenge-points">
+                  100
+                </span>
+              </p>
+            </div>
+
+            <!-- Java editor -->
+
+            <div class="coding-panel">
+              <div class="editor-heading">
+                <label for="code-editor">
+                  Java programming environment
+                </label>
+
+                <span>
+                  Main.java
+                </span>
+              </div>
+
+              <textarea
+                id="code-editor"
+                spellcheck="false"
+                autocomplete="off"
+                autocapitalize="off"
+                aria-label="Java code editor"
+              >public class Main {
+    public static void main(String[] args) {
+        // Write your Java code here
+    }
+}</textarea>
+
+              <!-- Editor buttons -->
+
+              <div class="editor-actions">
+                <button
+                  id="run-button"
+                  type="button"
+                >
+                  Run Code
+                </button>
+
+                <button
+                  id="submit-button"
+                  type="button"
+                >
+                  Submit Solution
+                </button>
+              </div>
+
+              <!-- Simulated console -->
+
+              <div
+                class="console"
+                aria-label="Program console"
+              >
+                <strong>
+                  Console
+                </strong>
+
+                <pre
+                  id="console-output"
+                  aria-live="polite"
+                >Ready...</pre>
+              </div>
+
+              <!-- Feedback -->
+
+              <p
+                id="feedback-message"
+                class="feedback-message"
+                aria-live="polite"
+              ></p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+ 
+
+  <script src="script.js"></script>
+</body>
+</html>

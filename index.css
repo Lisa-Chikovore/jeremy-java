@@ -1,0 +1,1475 @@
+
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+
+  font-size: 16px;
+
+  scroll-behavior: smooth;
+
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #f7edc8;
+  background: #020804;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  font-synthesis: none;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================================================
+   ROOT GAME CONTAINER
+========================================================= */
+
+#game {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+.screen {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   LANDING SCREEN
+========================================================= */
+
+#landing-screen {
+  display: grid;
+  place-items: center;
+
+  isolation: isolate;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      rgba(1, 7, 3, 0.45),
+      rgba(1, 7, 3, 0.82)
+    ),
+    url("assets/images.jpg")
+    center / cover
+    no-repeat;
+}
+
+.landing-overlay {
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(24, 69, 30, 0.18),
+      rgba(0, 0, 0, 0.84)
+    );
+}
+
+.landing-content {
+  width: min(900px, calc(100% - 32px));
+
+  padding: 45px 30px;
+
+  text-align: center;
+}
+
+.welcome-text {
+  margin: 0 0 10px;
+
+  color: #f2be3c;
+
+  font-size: clamp(17px, 2vw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+.landing-content h1 {
+  margin: 0;
+
+  color: #fff2bd;
+
+  font-family:
+   Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: clamp(44px, 7vw, 92px);
+  line-height: 0.98;
+
+  text-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(239, 173, 42, 0.25);
+}
+
+.landing-content h1 span {
+  display: block;
+
+  margin-top: 18px;
+
+  color: #efa927;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: clamp(20px, 3vw, 37px);
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.tagline {
+  max-width: 680px;
+
+  margin: 28px auto 35px;
+
+  color: #efe7c8;
+
+  font-size: clamp(17px, 2vw, 23px);
+  line-height: 1.6;
+
+  text-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.9);
+}
+
+#start-button {
+  min-width: 230px;
+
+  padding: 16px 28px;
+
+  border: 2px solid #f9c14b;
+  border-radius: 10px;
+
+  color: #241606;
+  background:
+    linear-gradient(
+      #ffc653,
+      #e98d12
+    );
+
+  box-shadow:
+    0 6px 0 #9e4e08,
+    0 14px 28px rgba(0, 0, 0, 0.45);
+
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#start-button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+}
+
+#start-button:active {
+  transform: translateY(4px);
+
+  box-shadow:
+    0 2px 0 #9e4e08,
+    0 7px 15px rgba(0, 0, 0, 0.38);
+}
+
+/* =========================================================
+   ADVENTURE SCREEN
+========================================================= */
+
+#adventure-screen {
+  background: #071008;
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+.game-hud {
+  position: relative;
+  z-index: 20;
+
+  min-height: 74px;
+
+  padding: 13px 24px;
+
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(160px, 1fr)
+    auto;
+
+  align-items: center;
+  gap: 20px;
+
+  border-bottom:
+    2px solid #856324;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10, 30, 14, 0.98),
+      rgba(28, 56, 28, 0.98),
+      rgba(10, 30, 14, 0.98)
+    );
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.45);
+}
+
+#back-button {
+  padding: 10px 16px;
+
+  border: 1px solid #9e843f;
+  border-radius: 8px;
+
+  color: #fff1c1;
+  background: #172c18;
+
+  font-weight: 800;
+}
+
+#back-button:hover {
+  border-color: #f2ad26;
+
+  background: #254429;
+}
+
+.game-name {
+  color: #f5be3f;
+
+  font-family:
+    Arial,
+  Helvetica,
+  sans-serif;
+  font-size: clamp(17px, 2vw, 24px);
+  text-align: center;
+}
+
+.hud-information {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+.hud-information span {
+  padding: 8px 12px;
+
+  border:
+    1px solid rgba(210, 169, 64, 0.55);
+
+  border-radius: 8px;
+
+  color: #e9dfbd;
+  background:
+    rgba(3, 14, 6, 0.6);
+
+  font-size: 14px;
+}
+
+.hud-information strong {
+  color: #f8b62e;
+}
+
+/* =========================================================
+   JUNGLE WORLD
+========================================================= */
+
+#jungle-world {
+  position: relative;
+
+  width: 100%;
+  height: calc(100vh - 74px);
+  min-height: 560px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      rgba(1, 10, 3, 0.25),
+      rgba(0, 4, 1, 0.55)
+    ),
+    url("assets/images.jpg")
+    center / cover
+    no-repeat;
+}
+
+#jungle-world::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 60% 45%,
+      transparent 0,
+      rgba(0, 0, 0, 0.12) 46%,
+      rgba(0, 0, 0, 0.62) 100%
+    );
+}
+
+#jungle-path {
+  position: absolute;
+
+  left: 6%;
+  bottom: -6%;
+
+  width: 92%;
+  height: 35%;
+
+  transform:
+    rotate(-25deg);
+
+  border-radius: 50%;
+
+  opacity: 0.48;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      #8b693c 0%,
+      #70502e 38%,
+      rgba(66, 45, 24, 0.45) 63%,
+      transparent 72%
+    );
+
+  filter: blur(2px);
+}
+
+/* =========================================================
+   EXPLORER
+========================================================= */
+
+#explorer {
+  position: absolute;
+  z-index: 8;
+
+  left: 10%;
+  top: 82%;
+
+  width: 64px;
+  height: auto;
+
+  object-fit: contain;
+
+  mix-blend-mode: lighten;
+
+  filter:
+    drop-shadow(
+      0 5px 8px rgba(0, 0, 0, 0.6)
+    );
+
+  transform:
+    translate(-50%, -50%);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    left 2.8s linear,
+    top 2.8s linear,
+    opacity 0.15s ease;
+}
+
+#explorer.is-moving {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================================================
+   CHECKPOINTS
+========================================================= */
+
+.checkpoint {
+  position: absolute;
+  z-index: 7;
+
+  width: 95px;
+
+  transform:
+    translate(-50%, -50%);
+
+  text-align: center;
+}
+
+.checkpoint img {
+  width: 76px;
+  height: 76px;
+
+  margin: 0 auto;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 6px 8px rgba(0, 0, 0, 0.6)
+    );
+}
+
+.checkpoint[data-level="8"] img {
+  width: 88px;
+  height: 88px;
+}
+
+.checkpoint span {
+  display: inline-block;
+
+  margin-top: -3px;
+  padding: 5px 9px;
+
+  border:
+    1px solid rgba(232, 184, 58, 0.7);
+
+  border-radius: 999px;
+
+  color: #fff3c5;
+  background:
+    rgba(5, 20, 8, 0.9);
+
+  font-size: 12px;
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================================
+   FULL-SCREEN CHALLENGE OVERLAY
+========================================================= */
+
+.challenge-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+  height: 100dvh;
+  min-height: 100vh;
+
+  padding: 0;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+
+  overflow: hidden;
+
+  background: rgba(0, 7, 2, 0.97);
+}
+
+/* =========================================================
+   CHALLENGE BOARD
+========================================================= */
+
+.challenge-board {
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+  max-height: none;
+
+  margin: 0;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr);
+
+  overflow: hidden;
+
+  border: none;
+  border-radius: 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1e381d,
+      #0b1d0f
+    );
+}
+
+/* =========================================================
+   CHALLENGE HEADER
+========================================================= */
+
+.challenge-header {
+  min-height: 92px;
+
+  padding: 18px 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  border-bottom:
+    2px solid #846523;
+
+  background:
+    linear-gradient(
+      90deg,
+      #243f21,
+      #173018
+    );
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.32);
+}
+
+.challenge-heading {
+  min-width: 0;
+}
+
+#challenge-level {
+  display: block;
+
+  color: #f7edc9;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.challenge-heading h2,
+#challenge-title {
+  margin: 5px 0 0;
+
+  color: #f3aa21;
+
+  font-family:
+    Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: clamp(22px, 2vw, 34px);
+  line-height: 1.1;
+}
+
+#timer {
+  flex-shrink: 0;
+
+  min-width: 104px;
+
+  padding: 13px 18px;
+
+  border:
+    2px solid rgba(255, 207, 94, 0.75);
+
+  border-radius: 999px;
+
+  color: #241606;
+  background: #f4aa21;
+
+  text-align: center;
+
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.32);
+
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* =========================================================
+   CHALLENGE TWO-COLUMN LAYOUT
+========================================================= */
+
+.challenge-layout {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  padding: 22px 28px 28px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(330px, 34%)
+    minmax(0, 66%);
+
+  gap: 28px;
+
+  overflow: hidden;
+}
+
+/* =========================================================
+   DOCUMENTATION PANEL
+========================================================= */
+
+.documentation-panel {
+  position: static;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  border:
+    2px solid #536f3a;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      160deg,
+      rgba(25, 55, 27, 0.98),
+      rgba(5, 18, 8, 0.99)
+    );
+
+  box-shadow:
+    inset 0 0 30px
+    rgba(115, 166, 76, 0.08);
+}
+
+.documentation-heading {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+
+  padding: 19px 20px;
+
+  border-bottom:
+    2px solid rgba(100, 132, 62, 0.65);
+
+  background:
+    rgba(31, 66, 32, 0.97);
+
+  backdrop-filter: blur(8px);
+}
+
+.documentation-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #f3aa21;
+
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+}
+
+.documentation-heading h3 {
+  margin: 0;
+
+  color: #fff0bb;
+
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.documentation-content {
+  padding: 20px;
+
+  color: #e9e3c4;
+
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.documentation-section {
+  padding-bottom: 18px;
+  margin-bottom: 21px;
+
+  border-bottom:
+    1px solid rgba(113, 140, 75, 0.32);
+}
+
+.documentation-section:last-child {
+  border-bottom: none;
+}
+
+.documentation-content h4 {
+  margin:
+    0 0 12px;
+
+  color: #f6e9b9;
+
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.documentation-content p {
+  margin:
+    0 0 13px;
+}
+
+.documentation-content ul,
+.documentation-content ol {
+  margin:
+    9px 0 16px;
+
+  padding-left: 24px;
+}
+
+.documentation-content li {
+  margin-bottom: 7px;
+}
+
+.documentation-content pre {
+  margin:
+    12px 0 17px;
+
+  padding: 14px;
+
+  overflow-x: auto;
+
+  border:
+    1px solid #4a6737;
+
+  border-radius: 9px;
+
+  color: #d9f6cc;
+  background: #040b06;
+
+  font-family:
+    Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  white-space: pre;
+}
+
+.documentation-content code {
+  font-family:
+  Arial,
+  Helvetica,
+  sans-serif;
+}
+
+.documentation-content p code,
+.documentation-content li code {
+  padding: 2px 5px;
+
+  border-radius: 4px;
+
+  color: #bff2a6;
+  background:
+    rgba(1, 10, 3, 0.82);
+}
+
+.documentation-note {
+  margin:
+    18px 0;
+
+  padding: 13px 14px;
+
+  border-left:
+    4px solid #f4aa21;
+
+  border-radius: 6px;
+
+  color: #fff0bb;
+  background:
+    rgba(244, 170, 33, 0.12);
+}
+
+/* Documentation scrollbar */
+
+.documentation-panel {
+  scrollbar-width: thin;
+  scrollbar-color:
+    #6d8a48
+    #08150a;
+}
+
+.documentation-panel::-webkit-scrollbar {
+  width: 9px;
+}
+
+.documentation-panel::-webkit-scrollbar-track {
+  background: #08150a;
+}
+
+.documentation-panel::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #6d8a48;
+}
+
+.documentation-panel::-webkit-scrollbar-thumb:hover {
+  background: #8aa85f;
+}
+
+/* =========================================================
+   CHALLENGE WORKSPACE
+========================================================= */
+
+.challenge-workspace {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr);
+
+  gap: 16px;
+
+  overflow: hidden;
+}
+
+.challenge-instructions {
+  padding: 18px 20px;
+
+  border:
+    2px solid rgba(89, 119, 61, 0.75);
+
+  border-radius: 12px;
+
+  background:
+    rgba(4, 16, 7, 0.68);
+}
+
+.challenge-section-heading span {
+  color: #efe7c8;
+
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+}
+
+.challenge-section-heading h3 {
+  margin:
+    7px 0 10px;
+
+  color: #fff0bd;
+
+  font-size: 23px;
+}
+
+.challenge-instructions p {
+  margin:
+    0 0 12px;
+
+  color: #eee6c7;
+
+  line-height: 1.6;
+}
+
+.challenge-points-row {
+  margin-bottom: 0 !important;
+
+  color: #ffd567 !important;
+}
+
+/* =========================================================
+   CODING PANEL
+========================================================= */
+
+.coding-panel {
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(230px, 1fr)
+    auto
+    auto
+    auto;
+
+  gap: 12px;
+
+  overflow: hidden;
+}
+
+.editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.editor-heading label {
+  color: #f4aa21;
+
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.editor-heading span {
+  padding: 5px 10px;
+
+  border:
+    1px solid rgba(87, 117, 58, 0.75);
+
+  border-radius: 6px;
+
+  color: #b5e99d;
+  background: #061008;
+
+  font-family:
+Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   CODE EDITOR
+========================================================= */
+
+#code-editor {
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  max-height: none;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  resize: none;
+
+  border:
+    2px solid #536d3c;
+
+  border-radius: 11px;
+
+  outline: none;
+
+  color: #daf7d3;
+  background: #030b05;
+
+  font-family:
+    Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: 16px;
+  line-height: 1.55;
+
+  tab-size: 4;
+
+  caret-color: #f4aa21;
+}
+
+#code-editor:focus {
+  border-color: #f4aa21;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(244, 170, 33, 0.16);
+}
+
+#code-editor:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.72;
+}
+
+/* =========================================================
+   EDITOR BUTTONS
+========================================================= */
+
+.editor-actions {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  flex-wrap: wrap;
+}
+
+.editor-actions button {
+  min-width: 145px;
+
+  padding: 13px 19px;
+
+  border:
+    2px solid #f6bf49;
+
+  border-radius: 9px;
+
+  color: #231505;
+  background:
+    linear-gradient(
+      #ffc653,
+      #eb9518
+    );
+
+  box-shadow:
+    0 5px 0 #9b4d09;
+
+  font-weight: 900;
+}
+
+.editor-actions button:hover:not(:disabled) {
+  transform:
+    translateY(-2px);
+
+  filter: brightness(1.07);
+}
+
+.editor-actions button:active:not(:disabled) {
+  transform:
+    translateY(3px);
+
+  box-shadow:
+    0 2px 0 #9b4d09;
+}
+
+.editor-actions button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.55;
+}
+
+/* =========================================================
+   CONSOLE
+========================================================= */
+
+.console {
+  min-height: 88px;
+  max-height: 145px;
+
+  padding: 14px;
+
+  overflow-y: auto;
+
+  border:
+    1px solid #253a28;
+
+  border-radius: 10px;
+
+  color: #ece5c9;
+  background: #020604;
+}
+
+.console strong {
+  color: #fff0bb;
+}
+
+#console-output {
+  margin:
+    10px 0 0;
+
+  color: #82ec79;
+
+  font-family:
+    Arial,
+  Helvetica,
+  sans-serif;
+
+  font-size: 14px;
+  line-height: 1.45;
+
+  white-space: pre-wrap;
+}
+
+
+
+.feedback-message {
+  min-height: 23px;
+
+  margin: 0;
+
+  color: #ffd362;
+
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   TABLET RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 1000px) {
+  body {
+    overflow: auto;
+  }
+
+  .challenge-overlay {
+    overflow-y: auto;
+  }
+
+  .challenge-board {
+    min-height: 100vh;
+    height: auto;
+
+    overflow: visible;
+  }
+
+  .challenge-layout {
+    height: auto;
+
+    grid-template-columns: 1fr;
+
+    overflow: visible;
+  }
+
+  .documentation-panel {
+    height: 360px;
+  }
+
+  .challenge-workspace {
+    height: auto;
+
+    overflow: visible;
+  }
+
+  .coding-panel {
+    display: block;
+
+    overflow: visible;
+  }
+
+  #code-editor {
+    height: 390px;
+
+    margin-top: 10px;
+    margin-bottom: 14px;
+
+    resize: vertical;
+  }
+
+  .editor-actions,
+  .console,
+  .feedback-message {
+    margin-top: 14px;
+  }
+
+  .game-hud {
+    grid-template-columns:
+      auto
+      1fr;
+  }
+
+  .hud-information {
+    grid-column:
+      1 / -1;
+
+    justify-content: center;
+  }
+
+  .game-name {
+    text-align: right;
+  }
+}
+
+/* =========================================================
+   PHONE RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 600px) {
+  .landing-content {
+    padding:
+      30px 18px;
+  }
+
+  .landing-content h1 {
+    font-size:
+      clamp(40px, 13vw, 62px);
+  }
+
+  .game-hud {
+    min-height: auto;
+
+    padding:
+      10px 12px;
+
+    grid-template-columns:
+      auto
+      1fr;
+
+    gap: 10px;
+  }
+
+  .game-name {
+    font-size: 16px;
+  }
+
+  .hud-information {
+    gap: 7px;
+  }
+
+  .hud-information span {
+    padding:
+      7px 9px;
+
+    font-size: 12px;
+  }
+
+  #jungle-world {
+    height:
+      calc(100vh - 116px);
+  }
+
+  .checkpoint {
+    width: 72px;
+  }
+
+  .checkpoint img {
+    width: 58px;
+    height: 58px;
+  }
+
+  .checkpoint span {
+    font-size: 10px;
+  }
+
+  #explorer {
+    width: 50px;
+  }
+
+  .challenge-header {
+    min-height: auto;
+
+    padding:
+      14px 16px;
+
+    gap: 12px;
+  }
+
+  #challenge-level {
+    font-size: 12px;
+  }
+
+  .challenge-heading h2,
+  #challenge-title {
+    font-size: 20px;
+  }
+
+  #timer {
+    min-width: 76px;
+
+    padding:
+      9px 10px;
+
+    font-size: 15px;
+  }
+
+  .challenge-layout {
+    padding: 13px;
+
+    gap: 15px;
+  }
+
+  .documentation-panel {
+    height: 310px;
+  }
+
+  .documentation-heading {
+    padding: 15px;
+  }
+
+  .documentation-heading h3 {
+    font-size: 18px;
+  }
+
+  .documentation-content {
+    padding: 15px;
+
+    font-size: 14px;
+  }
+
+  .challenge-instructions {
+    padding: 15px;
+  }
+
+  .challenge-section-heading h3 {
+    font-size: 20px;
+  }
+
+  .editor-heading {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 7px;
+  }
+
+  #code-editor {
+    height: 335px;
+
+    padding: 14px;
+
+    font-size: 14px;
+  }
+
+  .editor-actions {
+    flex-direction: column;
+  }
+
+  .editor-actions button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 380px) {
+  .challenge-header {
+    align-items: flex-start;
+  }
+
+  #timer {
+    min-width: 68px;
+
+    font-size: 13px;
+  }
+
+  .documentation-panel {
+    height: 270px;
+  }
+
+  #code-editor {
+    height: 300px;
+  }
+}
+
+
+/* =========================================================
+   CHALLENGE WORKSPACE HEIGHT FIX
+========================================================= */
+
+.challenge-workspace {
+  grid-template-rows:
+    minmax(180px, 42%)
+    minmax(0, 58%);
+
+  overflow: hidden;
+}
+
+.challenge-instructions {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#challenge-instruction {
+  white-space: pre-line;
+}
+
+.coding-panel {
+  min-height: 0;
+
+  grid-template-rows:
+    auto
+    minmax(160px, 1fr)
+    auto
+    minmax(88px, 135px)
+    auto;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+#code-editor {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  max-height: none;
+
+  resize: none;
+}
+
+.editor-actions {
+  flex-shrink: 0;
+}
+
+.console {
+  display: block;
+  min-height: 88px;
+  max-height: 135px;
+
+  overflow-y: auto;
+}
+
+.feedback-message {
+  display: block;
+  min-height: 23px;
+}
+
+
+
+.challenge-instructions,
+.coding-panel {
+  scrollbar-width: thin;
+  scrollbar-color: #6d8a48 #08150a;
+}
+
+.challenge-instructions::-webkit-scrollbar,
+.coding-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.challenge-instructions::-webkit-scrollbar-track,
+.coding-panel::-webkit-scrollbar-track {
+  background: #08150a;
+}
+
+.challenge-instructions::-webkit-scrollbar-thumb,
+.coding-panel::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #6d8a48;
+}
