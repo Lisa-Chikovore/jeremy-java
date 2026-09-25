@@ -600,29 +600,6 @@ img {
   line-height: 1.1;
 }
 
-#timer {
-  flex-shrink: 0;
-
-  min-width: 104px;
-
-  padding: 13px 18px;
-
-  border:
-    2px solid rgba(255, 207, 94, 0.75);
-
-  border-radius: 999px;
-
-  color: #241606;
-  background: #f4aa21;
-
-  text-align: center;
-
-  box-shadow:
-    0 5px 12px rgba(0, 0, 0, 0.32);
-
-  font-size: 20px;
-  font-weight: 900;
-}
 
 /* =========================================================
    CHALLENGE TWO-COLUMN LAYOUT
@@ -1297,14 +1274,6 @@ Arial,
     font-size: 20px;
   }
 
-  #timer {
-    min-width: 76px;
-
-    padding:
-      9px 10px;
-
-    font-size: 15px;
-  }
 
   .challenge-layout {
     padding: 13px;
@@ -1371,11 +1340,6 @@ Arial,
     align-items: flex-start;
   }
 
-  #timer {
-    min-width: 68px;
-
-    font-size: 13px;
-  }
 
   .documentation-panel {
     height: 270px;

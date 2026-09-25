@@ -63,9 +63,6 @@ const consoleOutput =
 const feedbackMessage =
   document.getElementById("feedback-message");
 
-const timerDisplay =
-  document.getElementById("timer");
-
 const jungleMusic =
   document.getElementById("jungle-music");
 
@@ -117,16 +114,6 @@ const checkpoints = [
 ];
 
 
-const levelTimeLimits = {
-  1: 10 * 60,
-  2: 10 * 60,
-  3: 10 * 60,
-  4: 10 * 60,
-  5: 20 * 60,
-  6: 20 * 60,
-  7: 20 * 60,
-  8: 20 * 60,
-};
 let currentChallengeIndex = 0;
 let currentCheckpointIndex = 0;
 let currentLevel = 1;
@@ -134,15 +121,12 @@ let currentLevel = 1;
 let score = 0;
 let completedLevels = 0;
 
-let levelSecondsRemaining = 0;
-let levelEndTime = null;
-
-let levelTimerId = null;
+let revealedHintCount = 0;
 let movementTimerId = null;
 let delayedActionId = null;
 
 let gameFinished = false;
-let levelExpired = false;
+
 
 
 
@@ -5776,12 +5760,37 @@ Standard output:
 },
 ];
 
-function updateDocumentation() {
-  documentationTitle.textContent =
-    javaDocumentation.title;
+// Keep the existing hints, grouped by challenge and revealed in order.
+const hintTemplate = document.createElement("template");
+hintTemplate.innerHTML = javaDocumentation.content;
+const challengeHints = Array.from(
+  hintTemplate.content.querySelectorAll(".documentation-section"),
+  section => Array.from(section.querySelectorAll(":scope > p, :scope > ol > li"),
+    hint => hint.innerHTML)
+);
 
-  documentationContent.innerHTML =
-    javaDocumentation.content;
+function updateDocumentation() {
+  const challenge = challenges[currentChallengeIndex];
+  const hints = challengeHints[currentChallengeIndex] || [];
+  revealedHintCount = Math.min(revealedHintCount, hints.length);
+  documentationTitle.textContent = challenge
+    ? `Level ${challenge.level} — Challenge ${challenge.challengeNumber} Hints`
+    : "Challenge Hints";
+  documentationContent.innerHTML = revealedHintCount === 0
+    ? "<p>Try solving the challenge</p>"
+    : `<ol>${hints.slice(0, revealedHintCount).map(hint => `<li>${hint}</li>`).join("")}</ol>`;
+  if (revealedHintCount > 0 && revealedHintCount === hints.length) {
+    documentationContent.insertAdjacentHTML("beforeend",
+      "<p>All hints for this challenge have been revealed. Review them and try again.</p>");
+  }
+}
+
+function revealNextHint() {
+  revealedHintCount += 1;
+  updateDocumentation();
+  saveChallengeState();
+  const latestHint = documentationContent.querySelector("ol > li:last-child");
+  if (latestHint) latestHint.scrollIntoView({ block: "nearest" });
 }
 
 
@@ -5804,14 +5813,13 @@ function hideExplorer() {
 
 
 function startAdventure() {
-  clearLevelTimer();
   clearMovementTimer();
   clearDelayedAction();
   clearSavedChallenge();
 
   gameFinished = false;
-  levelExpired = false;
 
+  revealedHintCount = 0;
   currentChallengeIndex = 0;
   currentCheckpointIndex = 0;
   currentLevel = 1;
@@ -5858,13 +5866,11 @@ function startAdventure() {
 }
 
 function returnToLanding() {
-  clearLevelTimer();
   clearMovementTimer();
   clearDelayedAction();
   clearSavedChallenge();
 
   gameFinished = false;
-  levelExpired = false;
 
   hideExplorer();
 
@@ -5888,11 +5894,6 @@ function resetChallengeControls() {
   runButton.disabled = false;
   submitButton.disabled = false;
 
-  timerDisplay.style.background =
-    "#f4aa21";
-
-  timerDisplay.style.color =
-    "#201306";
 }
 function clearDelayedAction() {
   if (delayedActionId !== null) {
@@ -5952,7 +5953,6 @@ function startCurrentLevel() {
     return;
   }
 
-  levelExpired = false;
 
   currentLevel =
     challenge.level;
@@ -5960,7 +5960,6 @@ function startCurrentLevel() {
   levelDisplay.textContent =
     String(currentLevel);
 
-  startLevelTimer(currentLevel);
 
   openChallenge(
     currentChallengeIndex
@@ -5968,7 +5967,6 @@ function startCurrentLevel() {
 }
 
 function completeCurrentLevel() {
-  clearLevelTimer();
   clearSavedChallenge();
 
   completedLevels += 1;
@@ -6002,9 +6000,9 @@ function completeCurrentLevel() {
 
 function saveChallengeState() {
   if (
-    levelEndTime === null ||
     gameFinished ||
-    levelExpired
+    challengeOverlay.classList.contains("hidden") ||
+    codeEditor.disabled
   ) {
     return;
   }
@@ -6015,7 +6013,7 @@ function saveChallengeState() {
     currentLevel,
     score,
     completedLevels,
-    endTime: levelEndTime,
+    revealedHintCount,
     editorCode: codeEditor.value
   };
 
@@ -6030,7 +6028,6 @@ function clearSavedChallenge() {
     CHALLENGE_STATE_KEY
   );
 
-  levelEndTime = null;
 }
 
 function restoreChallengeState() {
@@ -6045,13 +6042,8 @@ function restoreChallengeState() {
 
   try {
     const state = JSON.parse(savedState);
-    const savedEndTime =
-      Number(state.endTime);
-
-    if (
-      !Number.isFinite(savedEndTime) ||
-      savedEndTime <= Date.now()
-    ) {
+    if (!Number.isInteger(state.currentChallengeIndex) ||
+        !challenges[state.currentChallengeIndex]) {
       clearSavedChallenge();
       return false;
     }
@@ -6071,9 +6063,9 @@ function restoreChallengeState() {
     completedLevels =
       state.completedLevels ?? 0;
 
-    levelEndTime = savedEndTime;
+
     gameFinished = false;
-    levelExpired = false;
+
 
     scoreDisplay.textContent =
       String(score);
@@ -6101,10 +6093,9 @@ function restoreChallengeState() {
         state.editorCode;
     }
 
-    startLevelTimer(
-      currentLevel,
-      savedEndTime
-    );
+    revealedHintCount = Number.isInteger(state.revealedHintCount)
+      ? Math.max(0, state.revealedHintCount) : 0;
+    updateDocumentation();
 
     saveChallengeState();
 
@@ -6120,170 +6111,8 @@ function restoreChallengeState() {
   }
 }
 
-function startLevelTimer(
-  level,
-  savedEndTime = null
-) {
-  clearLevelTimer();
-
-  const duration =
-    levelTimeLimits[level] ??
-    10 * 60;
-
-  if (savedEndTime !== null) {
-    levelEndTime =
-      Number(savedEndTime);
-  } else {
-    levelEndTime =
-      Date.now() + duration * 1000;
-  }
-
-  function updateTimer() {
-    const millisecondsRemaining =
-      levelEndTime - Date.now();
-
-    levelSecondsRemaining =
-      Math.max(
-        0,
-        Math.ceil(
-          millisecondsRemaining / 1000
-        )
-      );
-
-    updateTimerDisplay();
-
-    if (levelSecondsRemaining <= 0) {
-      clearLevelTimer();
-      handleLevelTimeExpired();
-      clearSavedChallenge();
-    }
-  }
-
-  updateTimer();
-
-  if (levelSecondsRemaining > 0) {
-    levelTimerId =
-      window.setInterval(
-        updateTimer,
-        250
-      );
-  }
-
-  saveChallengeState();
-}
-function updateTimerDisplay() {
-  const safeSeconds =
-    Math.max(
-      0,
-      levelSecondsRemaining
-    );
-
-  const minutes =
-    Math.floor(
-      safeSeconds / 60
-    );
-
-  const seconds =
-    safeSeconds % 60;
-
-  const formattedMinutes =
-    String(minutes).padStart(
-      2,
-      "0"
-    );
-
-  const formattedSeconds =
-    String(seconds).padStart(
-      2,
-      "0"
-    );
-
-  timerDisplay.textContent =
-    `${formattedMinutes}:${formattedSeconds}`;
-
-  if (safeSeconds <= 60) {
-    timerDisplay.style.background =
-      "#df4c35";
-
-    timerDisplay.style.color =
-      "#ffffff";
-  } else {
-    timerDisplay.style.background =
-      "#f4aa21";
-
-    timerDisplay.style.color =
-      "#201306";
-  }
-}
-
-function clearLevelTimer() {
-  if (levelTimerId !== null) {
-    window.clearInterval(
-      levelTimerId
-    );
-
-    levelTimerId = null;
-  }
-}
-
-function handleLevelTimeExpired() {
-  clearLevelTimer();
-
-  levelSecondsRemaining = 0;
-  updateTimerDisplay();
-
-  consoleOutput.textContent =
-    "TIME EXPIRED";
-
-  feedbackMessage.textContent =
-    "Time expired. Moving to the next challenge...";
-
-  codeEditor.disabled = true;
-  runButton.disabled = true;
-  submitButton.disabled = true;
-
-  const expiredLevel = currentLevel;
-
-  // Skip the challenge that ran out of time.
-  currentChallengeIndex += 1;
-
-  const nextChallenge =
-    challenges[currentChallengeIndex];
-
-  clearDelayedAction();
-
-  delayedActionId =
-    window.setTimeout(() => {
-      levelExpired = false;
-
-      // There is another challenge in the same level.
-      if (
-        nextChallenge &&
-        nextChallenge.level === expiredLevel
-      ) {
-        resetChallengeControls();
-
-        startLevelTimer(expiredLevel);
-
-        openChallenge(
-          currentChallengeIndex
-        );
-
-        return;
-      }
-
-      // The expired challenge was the final
-      // challenge in this level.
-      challengeOverlay.classList.add(
-        "hidden"
-      );
-
-      completeCurrentLevel();
-    }, 1200);
-}
-
-
 function openChallenge(index) {
+  revealedHintCount = 0;
   const challenge =
     challenges[index];
 
@@ -6315,11 +6144,7 @@ function openChallenge(index) {
   feedbackMessage.textContent =
     "";
 
-  if (!levelExpired) {
-    codeEditor.disabled = false;
-    runButton.disabled = false;
-    submitButton.disabled = false;
-  }
+  resetChallengeControls();
 
   challengeOverlay.classList.remove(
     "hidden"
@@ -6344,7 +6169,7 @@ function runCode() {
   if (
     !challenge ||
     gameFinished ||
-    levelExpired
+    codeEditor.disabled
   ) {
     return;
   }
@@ -6370,7 +6195,8 @@ function runCode() {
       "No valid output";
 
     feedbackMessage.textContent =
-      "Check your Java code and try again.";
+      "Check your Java code and try again. Review the hints for help.";
+    revealNextHint();
   }
 }
 
@@ -6382,7 +6208,7 @@ function submitSolution() {
   if (
     !challenge ||
     gameFinished ||
-    levelExpired
+    codeEditor.disabled
   ) {
     return;
   }
@@ -6402,11 +6228,13 @@ function submitSolution() {
       "Wrong answer";
 
     feedbackMessage.textContent =
-      "The path remains closed. Correct your Java code first.";
+      "The path remains closed. Review the hints and try again.";
+    revealNextHint();
 
     return;
   }
 
+  clearSavedChallenge();
   runButton.disabled = true;
   submitButton.disabled = true;
   codeEditor.disabled = true;
@@ -6414,17 +6242,7 @@ function submitSolution() {
   consoleOutput.textContent =
     challenge.expectedOutput;
 
-  const timeBonus =
-    Math.max(
-      0,
-      Math.floor(
-        levelSecondsRemaining / 60
-      )
-    );
-
-  const earnedPoints =
-    challenge.points +
-    timeBonus;
+  const earnedPoints = challenge.points;
 
   score += earnedPoints;
 
@@ -6470,13 +6288,11 @@ function submitSolution() {
 
 
 function finishAdventure() {
-  clearLevelTimer();
   clearMovementTimer();
   clearDelayedAction();
   
 
   gameFinished = true;
-  levelExpired = false;
 
   completedLevels = 8;
 
@@ -6513,15 +6329,6 @@ function finishAdventure() {
 
   feedbackMessage.textContent =
     "Excellent work, Explorer! You completed the entire Java adventure.";
-
-  timerDisplay.textContent =
-    "COMPLETE";
-
-  timerDisplay.style.background =
-    "#4d7f38";
-
-  timerDisplay.style.color =
-    "#ffffff";
 
   progressDisplay.textContent =
     "8/8";
@@ -6621,7 +6428,6 @@ function verifyRequiredElements() {
     submitButton,
     consoleOutput,
     feedbackMessage,
-    timerDisplay,
   };
 
   const missingElements = Object.entries(requiredElements)
