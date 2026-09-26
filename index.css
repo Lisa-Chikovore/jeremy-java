@@ -1437,3 +1437,8 @@ Arial,
   border-radius: 999px;
   background: #6d8a48;
 }
+.program-input-panel { margin: 16px 0; }
+.program-input-panel label { display: block; color: #ffc65a; font-weight: 700; }
+.program-input-panel p { margin: 6px 0; font-size: 13px; color: #e2e8d3; }
+#program-input { width: 100%; min-height: 80px; padding: 12px; border: 1px solid #687f44; border-radius: 10px; background: #0a1c10; color: #fff; font: 14px/1.5 Consolas, monospace; resize: vertical; }
+#console-output { white-space: pre-wrap; overflow-wrap: anywhere; }
